@@ -40,7 +40,7 @@ public class Lobby : MonoBehaviour
     }
     public void SpawnGameObject()
     {
-        dialogBox.SetActive(true);
+        dialogBox.SetActive(true); 
     }
     public async void JoinRoom(string s)
     {

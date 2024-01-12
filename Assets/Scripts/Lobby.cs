@@ -10,6 +10,7 @@ public class Lobby : MonoBehaviour
 {
     // Start is called before the first frame update
     public string roomId;
+    public GameObject dialogBox;
     async void Start()
     {
         await UnityServices.InitializeAsync();
@@ -37,5 +38,20 @@ public class Lobby : MonoBehaviour
         Debug.Log("Lobby Created with Id " + lobby.LobbyCode);
         roomId = lobby.LobbyCode;
     }
-    
+    public void SpawnGameObject()
+    {
+        dialogBox.SetActive(true);
+    }
+    public async void JoinRoom(string s)
+    {
+        try
+        {
+            await LobbyService.Instance.JoinLobbyByCodeAsync(s);
+            Debug.Log(s + " Lobby Joined");
+        }
+        catch(LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
 }

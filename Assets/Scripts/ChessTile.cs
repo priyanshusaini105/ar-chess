@@ -9,29 +9,68 @@ public enum TileColor
 public class ChessTile : MonoBehaviour
 {
     public TileColor tileColor;
+    public Color myTileColor;
+    public Color highLightColor;
+    private Material tileMaterial;
 
-    // void Start()
-    // {
-    //     SetTileColor(tileColor);
-    // }
+    void Start()
+    {
+        tileMaterial = GetComponent<Renderer>().material;
+        myTileColor = tileColor == TileColor.White ? Color.white : Color.black;
+        SetTileColor(myTileColor);
+        highLightColor = Color.yellow;
+    }
 
-    // public void SetTileColor(TileColor color)
-    // {
-    //     tileColor = color;
-    //     Renderer renderer = GetComponent<Renderer>();
+    private void Update()
+    {
+        HighlightTileOnHover();
+    }
 
-    //     Material material = color == TileColor.White ? GetWhiteMaterial() : GetBlackMaterial();
+    public void SetTileColor(Color color)
+    {
+        tileMaterial.color = color;
+    }
 
-    //     renderer.material = material;
-    // }
+  
+    public void HighlightTileOnHover()
+    {
+       
+        if (IsMouseOverTile())
+        {
+            
+            SetTileColor(highLightColor);
+        }
+        else
+        {
+            SetTileColor(myTileColor);
+        }
+    }
 
-    // private Material GetWhiteMaterial()
-    // {
-    //     return new Material(Shader.Find("Standard")) { color = tileColor.White };
-    // }
+    private bool IsMouseOverTile()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-    // private Material GetBlackMaterial()
-    // {
-    //     return new Material(Shader.Find("Standard")) { color = tileColor.Black };
-    // }
+        // Cast a ray from the camera to the mouse position
+        if (Physics.Raycast(ray, out hit))
+        {
+            // Check if the hit object is this tile
+            if (hit.collider.gameObject == gameObject)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public PieceType GetPieceName()
+    {
+        var piece = GetComponentInChildren<ChessPiece>();
+        if (piece != null)
+        {
+            return piece.pieceType;
+        }
+        return PieceType.NONE;
+    }
 }
